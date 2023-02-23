@@ -32,7 +32,7 @@ public class EnemyCopy : MonoBehaviour
         }
         else
         {
-            moviment.x = 0;
+            moviment.x = 1;
         }
         if(initPos.position.y - enemy.position.y > 0)
         {
@@ -44,7 +44,7 @@ public class EnemyCopy : MonoBehaviour
         }
         else
         {
-            moviment.y = 0;
+            moviment.y = 1;
         }
 
         animator.SetFloat("Horizontal", moviment.x);
