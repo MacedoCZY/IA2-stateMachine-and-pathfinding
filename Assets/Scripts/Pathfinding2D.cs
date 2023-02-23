@@ -5,79 +5,78 @@ using System.Collections.Generic;
 public class Pathfinding2D : MonoBehaviour
 {
 
-    public Transform seeker, target;
-    Grid2D grid;
-    Node2D seekerNode, targetNode;
-    public GameObject GridOwner;
+    public Transform enemy, player;
+    public GameObject CtrlGrid;
+    public int costStraight = 1, costDiag = 4;
 
+    Grid2D grid;
+    Node2D enemyN, playerN;
+    
 
     void Start()
     {
-        //Instantiate grid
-        grid = GridOwner.GetComponent<Grid2D>();
-
+        grid = CtrlGrid.GetComponent<Grid2D>();
     }
 
     void Update()
     {
-        FindPath(seeker.transform.position, target.transform.position);
+        FindPath(enemy.transform.position, player.transform.position);
+        enemy.transform.position = Vector2.MoveTowards(enemy.transform.position, grid.pathFinded[0].truePosFromWorld, 3f * Time.deltaTime);
     }
 
-    public void FindPath(Vector3 startPos, Vector3 targetPos)
+    public void FindPath(Vector3 enemyPos, Vector3 playerPos)
     {
-        //get player and target position in grid coords
-        seekerNode = grid.NodeFromWorldPoint(startPos);
-        targetNode = grid.NodeFromWorldPoint(targetPos);
+        //pegar os pontos do player e enemy para cada chamada da funcao
+        enemyN = grid.pointWorld(enemyPos);
+        playerN = grid.pointWorld(playerPos);
 
-        List<Node2D> openSet = new List<Node2D>();
-        HashSet<Node2D> closedSet = new HashSet<Node2D>();
-        openSet.Add(seekerNode);
+        List<Node2D> possibleNode = new List<Node2D>();
+        HashSet<Node2D> noPossibleNode = new HashSet<Node2D>();
+        possibleNode.Add(enemyN);
         
-        //calculates path for pathfinding
-        while (openSet.Count > 0)
+        //enquanto houver nodes
+        while (possibleNode.Count > 0)
         {
 
-            //iterates through openSet and finds lowest FCost
-            Node2D node = openSet[0];
-            for (int i = 1; i < openSet.Count; i++)
+            //calcular os custos
+            Node2D node = possibleNode[0];
+            for (int i = 1; i < possibleNode.Count; i++)
             {
-                if (openSet[i].FCost <= node.FCost)
+                if (possibleNode[i].FCost <= node.FCost)
                 {
-                    if (openSet[i].hCost < node.hCost)
-                        node = openSet[i];
+                    if (possibleNode[i].hCost < node.hCost)
+                        node = possibleNode[i];
                 }
             }
 
-            openSet.Remove(node);
-            closedSet.Add(node);
+            possibleNode.Remove(node);
+            noPossibleNode.Add(node);
 
-            //If target found, retrace path
-            if (node == targetNode)
+            //caso encontre o jogardor refazer o path ao contrario
+            if (node == playerN)
             {
-                RetracePath(seekerNode, targetNode);
+                RetracePath(enemyN, playerN);
                 return;
             }
 
-            int x = 0;
-            //adds neighbor nodes to openSet
-            foreach (Node2D neighbour in grid.GetNeighbors(node))
+            //adicionando filhos possiveis
+            foreach (Node2D nodeP in grid.nodeParents(node))
             {
-                if (neighbour.obstacle || closedSet.Contains(neighbour))
+                if (nodeP.collidable || noPossibleNode.Contains(nodeP))
                 {
                     continue;
                 }
 
-                int newCostToNeighbour = node.gCost + GetDistance(node, neighbour);
-                if (newCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour))
+                int newCostToNodeP = node.gCost + Distance(node, nodeP);
+                if (newCostToNodeP < nodeP.gCost || !possibleNode.Contains(nodeP))
                 {
-                    neighbour.gCost = newCostToNeighbour;
-                    neighbour.hCost = GetDistance(neighbour, targetNode);
-                    neighbour.parent = node;
+                    nodeP.gCost = newCostToNodeP;
+                    nodeP.hCost = Distance(nodeP, playerN);
+                    nodeP.parent = node;
 
-                    if (!openSet.Contains(neighbour))
+                    if (!possibleNode.Contains(nodeP))
                     {
-                        openSet.Add(neighbour);
-                        transform.position = Vector2.MoveTowards(transform.position, openSet[x].worldPosition, Time.deltaTime);
+                        possibleNode.Add(nodeP);
                     }
                 }
             }
@@ -93,31 +92,32 @@ public class Pathfinding2D : MonoBehaviour
         }
     }
 
-    //reverses calculated path so first node is closest to seeker
-    void RetracePath(Node2D startNode, Node2D endNode)
+    //calculo do path ao contrario
+    void RetracePath(Node2D start, Node2D end)
     {
-        List<Node2D> path = new List<Node2D>();
-        Node2D currentNode = endNode;
+        List<Node2D> pathFinded = new List<Node2D>();
+        Node2D no = end;
 
-        while (currentNode != startNode)
+        while (no != start)
         {
-            path.Add(currentNode);
-            currentNode = currentNode.parent;
+            pathFinded.Add(no);
+            no = no.parent;
         }
-        path.Reverse();
+        pathFinded.Reverse();
 
-        grid.path = path;
+        grid.pathFinded = pathFinded;
 
     }
 
-    //gets distance between 2 nodes for calculating cost
-    int GetDistance(Node2D nodeA, Node2D nodeB)
+    //calculo da melhor distancia
+    int Distance(Node2D nodeOne, Node2D nodeTwo)
     {
-        int dstX = Mathf.Abs(nodeA.GridX - nodeB.GridX);
-        int dstY = Mathf.Abs(nodeA.GridY - nodeB.GridY);
+        int x = Mathf.Abs(nodeOne.GridX - nodeTwo.GridX);
+        int y = Mathf.Abs(nodeOne.GridY - nodeTwo.GridY);
 
-        if (dstX > dstY)
-            return 14 * dstY + 10 * (dstX - dstY);
-        return 14 * dstX + 10 * (dstY - dstX);
+        if (x > y)
+            return costDiag * y + costStraight * (x - y);
+
+        return costDiag * x + costStraight * (y - x);
     }
 }

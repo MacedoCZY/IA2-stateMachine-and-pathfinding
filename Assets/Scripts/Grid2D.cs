@@ -6,108 +6,105 @@ using UnityEngine.Tilemaps;
 public class Grid2D : MonoBehaviour
 {
     public Vector3 gridWorldSize;
-    public float nodeRadius;
+    public float nodeRadius, distancePerGrid;
     public Node2D[,] Grid;
     public Tilemap obstaclemap;
-    public List<Node2D> path;
+    public List<Node2D> pathFinded;
     Vector3 worldBottomLeft;
 
     float nodeDiameter;
     public int gridSizeX, gridSizeY;
 
-    void Awake()
-    {
+    void Awake(){
         nodeDiameter = nodeRadius * 2;
         gridSizeX = Mathf.RoundToInt(gridWorldSize.x / nodeDiameter);
         gridSizeY = Mathf.RoundToInt(gridWorldSize.y / nodeDiameter);
-        CreateGrid();
-        OnDrawGizmos();
+        newGrid();
     }
 
     
 
-    void CreateGrid()
-    {
+    void newGrid(){
         Grid = new Node2D[gridSizeX, gridSizeY];
         worldBottomLeft = transform.position - Vector3.right * gridWorldSize.x / 2 - Vector3.up * gridWorldSize.y / 2;
 
-        for (int x = 0; x < gridSizeX; x++)
-        {
-            for (int y = 0; y < gridSizeY; y++)
-            {
+        for (int x = 0; x < gridSizeX; x++){
+            for (int y = 0; y < gridSizeY; y++){
                 Vector3 worldPoint = worldBottomLeft + Vector3.right * (x * nodeDiameter + nodeRadius) + Vector3.up * (y * nodeDiameter + nodeRadius);
                 Grid[x, y] = new Node2D(false, worldPoint, x, y);
 
-                if (obstaclemap.HasTile(obstaclemap.WorldToCell(Grid[x, y].worldPosition)))
-                    Grid[x, y].SetObstacle(true);
+                if (obstaclemap.HasTile(obstaclemap.WorldToCell(Grid[x, y].truePosFromWorld)))
+                    Grid[x, y].tilemapCollidable(true);
                 else
-                    Grid[x, y].SetObstacle(false);
-
-
+                    Grid[x, y].tilemapCollidable(false);
             }
         }
     }
 
+    public List<Node2D> nodeParents(Node2D a_NeighborNode){
+        List<Node2D> NeighborList = new List<Node2D>();
+        int vX;
+        int vY;
 
-    //gets the neighboring nodes in the 4 cardinal directions. If you would like to enable diagonal pathfinding, uncomment out that portion of code
-    public List<Node2D> GetNeighbors(Node2D node)
+        //Nodes da direita
+        vX = a_NeighborNode.GridX + 1;
+        vY = a_NeighborNode.GridY;
+        if (vX >= 0 && vX < gridSizeX)
+        {
+            if (vY >= 0 && vY < gridSizeY)
+            {
+                NeighborList.Add(Grid[vX, vY]);
+            }
+        }
+        //Nodes da esquerda
+        vX = a_NeighborNode.GridX - 1;
+        vY = a_NeighborNode.GridY;
+        if (vX >= 0 && vX < gridSizeX)
+        {
+            if (vY >= 0 && vY < gridSizeY)
+            {
+                NeighborList.Add(Grid[vX, vY]);
+            }
+        }
+        //Nodes de cima
+        vX = a_NeighborNode.GridX;
+        vY = a_NeighborNode.GridY + 1;
+        if (vX >= 0 && vX < gridSizeX)
+        {
+            if (vY >= 0 && vY < gridSizeY)
+            {
+                NeighborList.Add(Grid[vX, vY]);
+            }
+        }
+        //Nodes de baixo
+        vX = a_NeighborNode.GridX;
+        vY = a_NeighborNode.GridY - 1;
+        if (vX >= 0 && vX < gridSizeX)
+        {
+            if (vY >= 0 && vY < gridSizeY)
+            {
+                NeighborList.Add(Grid[vX, vY]);
+            }
+        }
+
+        return NeighborList;
+    }
+ 
+    public Node2D pointWorld(Vector3 a_vWorldPos)
     {
-        List<Node2D> neighbors = new List<Node2D>();
+        float x = ((a_vWorldPos.x + gridWorldSize.x / 2) / gridWorldSize.x);
+        float y = ((a_vWorldPos.y + gridWorldSize.y / 2) / gridWorldSize.y);
 
-        //checks and adds top neighbor
-        if (node.GridX >= 0 && node.GridX < gridSizeX && node.GridY + 1 >= 0 && node.GridY + 1 < gridSizeY)
-            neighbors.Add(Grid[node.GridX, node.GridY + 1]);
+        x = Mathf.Clamp01(x);
+        y = Mathf.Clamp01(y);
 
-        //checks and adds bottom neighbor
-        if (node.GridX >= 0 && node.GridX < gridSizeX && node.GridY - 1 >= 0 && node.GridY - 1 < gridSizeY)
-            neighbors.Add(Grid[node.GridX, node.GridY - 1]);
+        int xX = Mathf.RoundToInt((gridSizeX - 1) * x);
+        int yY = Mathf.RoundToInt((gridSizeY - 1) * y);
 
-        //checks and adds right neighbor
-        if (node.GridX + 1 >= 0 && node.GridX + 1 < gridSizeX && node.GridY >= 0 && node.GridY < gridSizeY)
-            neighbors.Add(Grid[node.GridX + 1, node.GridY]);
-
-        //checks and adds left neighbor
-        if (node.GridX - 1 >= 0 && node.GridX - 1 < gridSizeX && node.GridY >= 0 && node.GridY < gridSizeY)
-            neighbors.Add(Grid[node.GridX - 1, node.GridY]);
-
-
-
-     
-        /*
-        //checks and adds top right neighbor
-        if (node.GridX + 1 >= 0 && node.GridX + 1< gridSizeX && node.GridY + 1 >= 0 && node.GridY + 1 < gridSizeY)
-            neighbors.Add(Grid[node.GridX + 1, node.GridY + 1]);
-
-        //checks and adds bottom right neighbor
-        if (node.GridX + 1>= 0 && node.GridX + 1 < gridSizeX && node.GridY - 1 >= 0 && node.GridY - 1 < gridSizeY)
-            neighbors.Add(Grid[node.GridX + 1, node.GridY - 1]);
-
-        //checks and adds top left neighbor
-        if (node.GridX - 1 >= 0 && node.GridX - 1 < gridSizeX && node.GridY + 1>= 0 && node.GridY + 1 < gridSizeY)
-            neighbors.Add(Grid[node.GridX - 1, node.GridY + 1]);
-
-        //checks and adds bottom left neighbor
-        if (node.GridX - 1 >= 0 && node.GridX - 1 < gridSizeX && node.GridY  - 1>= 0 && node.GridY  - 1 < gridSizeY)
-            neighbors.Add(Grid[node.GridX - 1, node.GridY - 1]);
-        
-       */
-
-
-        return neighbors;
+        return Grid[xX, yY];
     }
 
-
-    public Node2D NodeFromWorldPoint(Vector3 worldPosition)
-    {
-
-        int x = Mathf.RoundToInt(worldPosition.x - 1 + (gridSizeX / 2));
-        int y = Mathf.RoundToInt(worldPosition.y + (gridSizeY / 2));
-        return Grid[x, y];
-    }
-
-
-    
-    //Draws visual representation of grid
+    //Debug, desenhar representacao do grid e seu funcionamento
     void OnDrawGizmos()
     {
         Gizmos.DrawWireCube(transform.position, new Vector3(gridWorldSize.x, gridWorldSize.y, 1));
@@ -116,14 +113,15 @@ public class Grid2D : MonoBehaviour
         {
             foreach (Node2D n in Grid)
             {
-                if (n.obstacle)
-                    Gizmos.color = Color.red;
+                if (n.collidable)
+                    Gizmos.color = Color.blue;
                 else
-                    Gizmos.color = Color.white;
-
-                if (path != null && path.Contains(n))
                     Gizmos.color = Color.black;
-                Gizmos.DrawCube(n.worldPosition, Vector3.one * (nodeRadius));
+
+                if (pathFinded != null && pathFinded.Contains(n))
+                    Gizmos.color = Color.white;
+                Gizmos.DrawCube(n.truePosFromWorld, Vector3.one * (nodeDiameter - distancePerGrid));
+
             }
         }
     }

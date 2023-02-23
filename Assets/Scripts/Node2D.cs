@@ -4,50 +4,26 @@ using UnityEngine;
 
 public class Node2D
 {
-    public int gCost, hCost;
-    public bool obstacle;
-    public Vector3 worldPosition;
-
     public int GridX, GridY;
     public Node2D parent;
+    public int gCost, hCost;
+    public bool collidable;
+    public Vector3 truePosFromWorld;
 
-
-    public Node2D(bool _obstacle, Vector3 _worldPos, int _gridX, int _gridY)
-    {
-        obstacle = _obstacle;
-        worldPosition = _worldPos;
+    public Node2D(bool _collidable, Vector3 _truePos, int _gridX, int _gridY){
+        collidable = _collidable;
+        truePosFromWorld = _truePos;
         GridX = _gridX;
         GridY = _gridY;
     }
 
-    public int getX
-    {
-        get
-        {
-            return GridX;
-        }
-    }
-
-    public int getY
-    {
-        get
-        {
-            return GridY;
-        }
-    }
-
-    public int FCost
-    {
-        get
-        {
+    public int FCost{
+        get{
             return gCost + hCost;
         }
-
     }
-    
 
-    public void SetObstacle(bool isOb)
-    {
-        obstacle = isOb;
+    public void tilemapCollidable(bool coll){
+        collidable = coll;
     }
 }

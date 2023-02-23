@@ -176,7 +176,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 1.6
+  orthographic size: 10
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -633,7 +633,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1217191007}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -19.8, y: 6.15, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -760,7 +760,6 @@ GameObject:
   - component: {fileID: 1679782289}
   - component: {fileID: 1679782288}
   - component: {fileID: 1679782290}
-  - component: {fileID: 1679782291}
   m_Layer: 0
   m_Name: Tilemap
   m_TagString: Untagged
@@ -1287,18 +1286,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Tilemap: {fileID: 1679782289}
---- !u!114 &1679782291
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1679782286}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 447d20c70196d4e4dadbd798650507b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2009491356
 GameObject:
   m_ObjectHideFlags: 0
@@ -1310,7 +1297,7 @@ GameObject:
   - component: {fileID: 2009491358}
   - component: {fileID: 2009491357}
   m_Layer: 0
-  m_Name: GridOwner
+  m_Name: CtrlGrid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1328,8 +1315,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4b434651ce39bd48875cd912b9e8f13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridWorldSize: {x: 16, y: 4, z: 0}
-  nodeRadius: 0
+  gridWorldSize: {x: 64, y: 64, z: 0}
+  nodeRadius: 0.5
+  distancePerGrid: 0
   obstaclemap: {fileID: 735526640}
   gridSizeX: 0
   gridSizeY: 0
@@ -1377,7 +1365,7 @@ Rigidbody2D:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2108787769}
   m_BodyType: 0
-  m_Simulated: 1
+  m_Simulated: 0
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
@@ -1388,7 +1376,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!61 &2108787771
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1475,7 +1463,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2108787769}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.49, y: -0.17, z: 0}
+  m_LocalPosition: {x: 19.87, y: -8.48, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1494,6 +1482,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06b00121094ae3e4c97d1347a70e1390, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  seeker: {fileID: 2108787773}
-  target: {fileID: 1217191010}
-  GridOwner: {fileID: 2009491356}
+  enemy: {fileID: 2108787773}
+  player: {fileID: 1217191010}
+  CtrlGrid: {fileID: 2009491356}
+  costStraight: 50
+  costDiag: 70
