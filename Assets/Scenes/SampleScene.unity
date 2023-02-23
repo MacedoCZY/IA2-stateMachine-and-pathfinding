@@ -1316,7 +1316,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gridWorldSize: {x: 64, y: 64, z: 0}
-  nodeRadius: 0.5
+  nodeRadius: 0.1
   distancePerGrid: 0
   obstaclemap: {fileID: 735526640}
   gridSizeX: 0
