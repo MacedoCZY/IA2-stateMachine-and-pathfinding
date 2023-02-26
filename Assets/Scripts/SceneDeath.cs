@@ -13,7 +13,8 @@ public class SceneDeath : MonoBehaviour
 
     void Update()
     {
-      
+        if(Input.GetKey(KeyCode.R))
+            SceneManager.LoadScene(Player.lastScn);
     }
 
     public void Quit()
@@ -24,6 +25,7 @@ public class SceneDeath : MonoBehaviour
 
     void ReloadLevel()
     {
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene(Player.lastScn);
     }
+
 }   

@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
     public Rigidbody2D playerRb;
     public Animator animator;
     Vector2 moviment;
-
+    public static string lastScn;
 
     [HideInInspector]
     public static bool alive = true;
@@ -55,6 +55,7 @@ public class Player : MonoBehaviour
         }
         else
         {
+            lastScn = SceneManager.GetActiveScene().name;
             SceneManager.LoadScene("Death");
         }
     }

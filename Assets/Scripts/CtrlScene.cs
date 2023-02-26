@@ -13,6 +13,7 @@ public class CtrlScene : MonoBehaviour
     float dist, dist2;
     public MeshRenderer txt, noOpen;
     bool open = false;
+    new public string name;
 
     void Start()
     {
@@ -38,7 +39,7 @@ public class CtrlScene : MonoBehaviour
             if (open)
             {
                 if(Input.GetKeyDown(KeyCode.F))
-                    SceneManager.LoadScene("Scene2");
+                    SceneManager.LoadScene(name);
             }
             else
             {
