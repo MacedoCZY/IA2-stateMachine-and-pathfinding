@@ -17,6 +17,7 @@ public class Player : MonoBehaviour
     [HideInInspector]
     public static bool alive = true;
 
+   
 
     // Start is called before the first frame update
     void Start()
@@ -54,8 +55,7 @@ public class Player : MonoBehaviour
         }
         else
         {
-            ReloadLevel();
-            alive = true;
+            SceneManager.LoadScene("Death");
         }
     }
 
@@ -63,8 +63,4 @@ public class Player : MonoBehaviour
         playerRb.MovePosition(playerRb.position + moviment * speed * Time.fixedDeltaTime);
     }
 
-    void ReloadLevel()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
 }
