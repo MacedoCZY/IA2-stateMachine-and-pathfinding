@@ -22,26 +22,8 @@ public class Grid2D : MonoBehaviour
         newGrid();
     }
 
-    
-
-    void newGrid(){
-        Grid = new Node2D[gridSizeX, gridSizeY];
-        worldBottomLeft = transform.position - Vector3.right * gridWorldSize.x / 2 - Vector3.up * gridWorldSize.y / 2;
-
-        for (int x = 0; x < gridSizeX; x++){
-            for (int y = 0; y < gridSizeY; y++){
-                Vector3 worldPoint = worldBottomLeft + Vector3.right * (x * nodeDiameter + nodeRadius) + Vector3.up * (y * nodeDiameter + nodeRadius);
-                Grid[x, y] = new Node2D(false, worldPoint, x, y);
-
-                if (obstaclemap.HasTile(obstaclemap.WorldToCell(Grid[x, y].truePosFromWorld)))
-                    Grid[x, y].tilemapCollidable(true);
-                else
-                    Grid[x, y].tilemapCollidable(false);
-            }
-        }
-    }
-
-    public List<Node2D> nodeParents(Node2D a_NeighborNode){
+    public List<Node2D> nodeParents(Node2D a_NeighborNode)
+    {
         List<Node2D> NeighborList = new List<Node2D>();
         int vX;
         int vY;
@@ -89,7 +71,7 @@ public class Grid2D : MonoBehaviour
 
         return NeighborList;
     }
- 
+
     public Node2D pointWorld(Vector3 a_vWorldPos)
     {
         float x = ((a_vWorldPos.x + gridWorldSize.x / 2) / gridWorldSize.x);
@@ -102,6 +84,23 @@ public class Grid2D : MonoBehaviour
         int yY = Mathf.RoundToInt((gridSizeY - 1) * y);
 
         return Grid[xX, yY];
+    }
+
+    void newGrid(){
+        Grid = new Node2D[gridSizeX, gridSizeY];
+        worldBottomLeft = transform.position - Vector3.right * gridWorldSize.x / 2 - Vector3.up * gridWorldSize.y / 2;
+
+        for (int x = 0; x < gridSizeX; x++){
+            for (int y = 0; y < gridSizeY; y++){
+                Vector3 worldPoint = worldBottomLeft + Vector3.right * (x * nodeDiameter + nodeRadius) + Vector3.up * (y * nodeDiameter + nodeRadius);
+                Grid[x, y] = new Node2D(false, worldPoint, x, y);
+
+                if (obstaclemap.HasTile(obstaclemap.WorldToCell(Grid[x, y].truePosFromWorld)))
+                    Grid[x, y].tilemapCollidable(true);
+                else
+                    Grid[x, y].tilemapCollidable(false);
+            }
+        }
     }
 
     //Debug, desenhar representacao do grid e seu funcionamento

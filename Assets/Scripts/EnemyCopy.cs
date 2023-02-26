@@ -8,43 +8,48 @@ public class EnemyCopy : MonoBehaviour
     public Rigidbody2D enemyRb;
     public Animator animator;
     Vector2 moviment;
-    Transform initPos;
-    public Transform enemy;
+    public Transform enemy, player;
+    public Pathfinding pt;
 
     // Start is called before the first frame update
     void Start()
     {
-        initPos = enemy.transform;
+    
     }
 
     // Update is called once per frame
     void Update()
     {
-        //moviment.x = Input.GetAxisRaw("Horizontal");
-        //moviment.y = Input.GetAxisRaw("Vertical");
-        if(initPos.position.x - enemy.position.x > 0)
-        {
-            moviment.x = 1;
-        }
-        else if(initPos.position.x - enemy.position.x < 0)
-        {
-            moviment.x = -1;
-        }
-        else
-        {
-            moviment.x = 1;
-        }
-        if(initPos.position.y - enemy.position.y > 0)
+        //pathfind
+        pt.FindPlayer(enemy, player);
+
+        Vector3 posAtual = this.transform.position;
+        Vector3 nextPos = pt.grid.pathFinded[0].truePosFromWorld;
+
+        if (posAtual.y < nextPos.y && posAtual.x < nextPos.x)
         {
             moviment.y = 1;
+            moviment.x = 1;
+        } 
+        if (posAtual.y < nextPos.y && posAtual.x == nextPos.x)
+        {
+            moviment.y = 1;
+            moviment.x = 0;
         }
-        else if(initPos.position.y - enemy.position.y < 0)
+        if (posAtual.y > nextPos.y && posAtual.x > nextPos.x)
         {
             moviment.y = -1;
-        }
-        else
+            moviment.x = -1;
+        } 
+        if (posAtual.y > nextPos.y && posAtual.x == nextPos.x)
         {
-            moviment.y = 1;
+            moviment.y = -1;
+            moviment.x = 0;
+        }
+        if(posAtual.y == nextPos.y && posAtual.x == nextPos.x)
+        {
+            moviment.y = 0;
+            moviment.x = 0;
         }
 
         animator.SetFloat("Horizontal", moviment.x);
@@ -61,6 +66,6 @@ public class EnemyCopy : MonoBehaviour
 
     private void FixedUpdate()
     {
-        enemyRb.MovePosition(enemyRb.position + moviment * speed * Time.fixedDeltaTime);
+        //enemyRb.MovePosition(enemyRb.position + moviment * speed * Time.fixedDeltaTime);
     }
 }

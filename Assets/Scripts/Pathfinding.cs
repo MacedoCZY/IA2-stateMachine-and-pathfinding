@@ -2,30 +2,62 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Pathfinding2D : MonoBehaviour
+public class Pathfinding : MonoBehaviour
 {
-
-    public Transform enemy, player;
     public GameObject CtrlGrid;
     public int costStraight = 1, costDiag = 4;
     public float speedEnemy;
     float dist;
 
-    Grid2D grid;
+    public Grid2D grid;
     Node2D enemyN, playerN;
     
 
-    void Start()
+    public void Start()
     {
         grid = CtrlGrid.GetComponent<Grid2D>();
     }
 
-    void Update()
+    public void Update()
+    {
+        //FindPlayer(enemy, player);
+    }
+
+    public void FindPlayer(Transform enemy, Transform player)
     {
         FindPath(enemy.transform.position, player.transform.position);
-        dist = (enemy.transform.position-player.transform.position).magnitude;
+        dist = (enemy.transform.position - player.transform.position).magnitude;
         if (dist >= 0.5)
             enemy.transform.position = Vector2.MoveTowards(enemy.transform.position, grid.pathFinded[0].truePosFromWorld, speedEnemy * Time.deltaTime);
+    }
+
+    //calculo do path ao contrario
+    void RetracePath(Node2D start, Node2D end)
+    {
+        List<Node2D> pathFinded = new List<Node2D>();
+        Node2D no = end;
+
+        while (no != start)
+        {
+            pathFinded.Add(no);
+            no = no.parent;
+        }
+        pathFinded.Reverse();
+
+        grid.pathFinded = pathFinded;
+
+    }
+
+    //calculo da melhor distancia
+    int Distance(Node2D nodeOne, Node2D nodeTwo)
+    {
+        int x = Mathf.Abs(nodeOne.GridX - nodeTwo.GridX);
+        int y = Mathf.Abs(nodeOne.GridY - nodeTwo.GridY);
+
+        if (x > y)
+            return costDiag * y + costStraight * (x - y);
+
+        return costDiag * x + costStraight * (y - x);
     }
 
     public void FindPath(Vector3 enemyPos, Vector3 playerPos)
@@ -85,43 +117,5 @@ public class Pathfinding2D : MonoBehaviour
                 }
             }
         }
-    }
-
-    private void FindPlayer(List<Node2D> position)
-    {
-        for (int x = 0; x < position.Count; x++)
-        {
-            //Vector2 vec = new Vector2((float)position[x].getX, (float)position[x].getY);
-            //transform.position = Vector2.MoveTowards(transform.position, position[x].worldPosition, Time.deltaTime);
-        }
-    }
-
-    //calculo do path ao contrario
-    void RetracePath(Node2D start, Node2D end)
-    {
-        List<Node2D> pathFinded = new List<Node2D>();
-        Node2D no = end;
-
-        while (no != start)
-        {
-            pathFinded.Add(no);
-            no = no.parent;
-        }
-        pathFinded.Reverse();
-
-        grid.pathFinded = pathFinded;
-
-    }
-
-    //calculo da melhor distancia
-    int Distance(Node2D nodeOne, Node2D nodeTwo)
-    {
-        int x = Mathf.Abs(nodeOne.GridX - nodeTwo.GridX);
-        int y = Mathf.Abs(nodeOne.GridY - nodeTwo.GridY);
-
-        if (x > y)
-            return costDiag * y + costStraight * (x - y);
-
-        return costDiag * x + costStraight * (y - x);
     }
 }
