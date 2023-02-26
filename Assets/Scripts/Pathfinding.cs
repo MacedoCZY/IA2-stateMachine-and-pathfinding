@@ -7,9 +7,13 @@ public class Pathfinding : MonoBehaviour
     public GameObject CtrlGrid;
     public int costStraight = 1, costDiag = 4;
     public float speedEnemy;
-    float dist;
 
+    [HideInInspector]
+    public float dist;
+
+    [HideInInspector]
     public Grid2D grid;
+    
     Node2D enemyN, playerN;
     
 
@@ -27,7 +31,7 @@ public class Pathfinding : MonoBehaviour
     {
         FindPath(enemy.transform.position, player.transform.position);
         dist = (enemy.transform.position - player.transform.position).magnitude;
-        if (dist >= 0.5)
+        if (dist >= 0.4)
             enemy.transform.position = Vector2.MoveTowards(enemy.transform.position, grid.pathFinded[0].truePosFromWorld, speedEnemy * Time.deltaTime);
     }
 

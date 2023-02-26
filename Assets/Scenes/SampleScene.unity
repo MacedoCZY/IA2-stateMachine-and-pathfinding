@@ -248,8 +248,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1679782287}
-  - {fileID: 735526637}
+  - {fileID: 2009491358}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -265,7 +264,7 @@ GameObject:
   - component: {fileID: 735526640}
   - component: {fileID: 735526639}
   - component: {fileID: 735526638}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: TilemapCollidable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -284,8 +283,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 557597257}
-  m_RootOrder: 1
+  m_Father: {fileID: 2009491358}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!19719996 &735526638
 TilemapCollider2D:
@@ -546,7 +545,7 @@ GameObject:
   - component: {fileID: 1217191012}
   - component: {fileID: 1217191011}
   - component: {fileID: 1217191013}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -700,7 +699,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.2, y: 0.4}
+  m_Size: {x: 0.2, y: 0.3}
   m_EdgeRadius: 0
 --- !u!1 &1243824219
 GameObject:
@@ -717,6 +716,8 @@ GameObject:
   - component: {fileID: 1243824226}
   - component: {fileID: 1243824220}
   - component: {fileID: 1243824225}
+  - component: {fileID: 1243824228}
+  - component: {fileID: 1243824227}
   m_Layer: 0
   m_Name: Enemy2
   m_TagString: Untagged
@@ -736,8 +737,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06b00121094ae3e4c97d1347a70e1390, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemy: {fileID: 1243824224}
-  player: {fileID: 1217191010}
   CtrlGrid: {fileID: 2009491356}
   costStraight: 50
   costDiag: 70
@@ -789,7 +788,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.2, y: 0.4}
+  m_Size: {x: 0.2, y: 0.3}
   m_EdgeRadius: 0
 --- !u!212 &1243824223
 SpriteRenderer:
@@ -856,7 +855,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1243824225
 MonoBehaviour:
@@ -865,7 +864,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1243824219}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f41c7faa6467f2a40928ad91e275a7a2, type: 3}
   m_Name: 
@@ -874,6 +873,7 @@ MonoBehaviour:
   enemyRb: {fileID: 1243824221}
   animator: {fileID: 1243824226}
   enemy: {fileID: 1243824224}
+  player: {fileID: 1217191010}
   pt: {fileID: 1243824220}
 --- !u!95 &1243824226
 Animator:
@@ -895,6 +895,40 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
+--- !u!114 &1243824227
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1243824219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2be7a3b188fbd9b46a3164d8e1aec2c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Enemy: {fileID: 1243824219}
+--- !u!114 &1243824228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1243824219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5872943b8bfff7e4f8cf78de456c0745, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewRadius: 1.2
+  viewAngle: 360
+  targetMask:
+    serializedVersion: 2
+    m_Bits: 8
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 0
+  player: {fileID: 1217191007}
 --- !u!1 &1525550211
 GameObject:
   m_ObjectHideFlags: 0
@@ -967,13 +1001,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1679782286}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 557597257}
-  m_RootOrder: 0
+  m_Father: {fileID: 2009491358}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!483693784 &1679782288
 TilemapRenderer:
@@ -1508,9 +1542,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4b434651ce39bd48875cd912b9e8f13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridWorldSize: {x: 64, y: 64, z: 0}
+  gridWorldSize: {x: 16, y: 8, z: 0}
   nodeRadius: 0.1
-  distancePerGrid: 0
+  distancePerGrid: 0.1
   obstaclemap: {fileID: 735526640}
   gridSizeX: 0
   gridSizeY: 0
@@ -1521,13 +1555,15 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2009491356}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_Children:
+  - {fileID: 735526637}
+  - {fileID: 1679782287}
+  m_Father: {fileID: 557597257}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2108787769
 GameObject:
@@ -1544,6 +1580,8 @@ GameObject:
   - component: {fileID: 2108787776}
   - component: {fileID: 2108787774}
   - component: {fileID: 2108787775}
+  - component: {fileID: 2108787778}
+  - component: {fileID: 2108787777}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -1596,7 +1634,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.2, y: 0.4}
+  m_Size: {x: 0.2, y: 0.3}
   m_EdgeRadius: 0
 --- !u!212 &2108787772
 SpriteRenderer:
@@ -1658,7 +1696,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2108787769}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.51, y: 2.49, z: 0}
+  m_LocalPosition: {x: -3.15, y: 0.19, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1677,8 +1715,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06b00121094ae3e4c97d1347a70e1390, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemy: {fileID: 2108787773}
-  player: {fileID: 1217191010}
   CtrlGrid: {fileID: 2009491356}
   costStraight: 50
   costDiag: 70
@@ -1692,7 +1728,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2108787769}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f41c7faa6467f2a40928ad91e275a7a2, type: 3}
   m_Name: 
@@ -1701,6 +1737,7 @@ MonoBehaviour:
   enemyRb: {fileID: 2108787770}
   animator: {fileID: 2108787776}
   enemy: {fileID: 2108787773}
+  player: {fileID: 1217191010}
   pt: {fileID: 2108787774}
 --- !u!95 &2108787776
 Animator:
@@ -1722,3 +1759,37 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
+--- !u!114 &2108787777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2108787769}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5872943b8bfff7e4f8cf78de456c0745, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewRadius: 1.2
+  viewAngle: 360
+  targetMask:
+    serializedVersion: 2
+    m_Bits: 8
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 0
+  player: {fileID: 1217191007}
+--- !u!114 &2108787778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2108787769}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2be7a3b188fbd9b46a3164d8e1aec2c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Enemy: {fileID: 2108787769}
