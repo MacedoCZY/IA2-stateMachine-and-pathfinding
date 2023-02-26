@@ -32,13 +32,13 @@ public class CtrlScene : MonoBehaviour
         }
 
         dist2 = (player.transform.position - exit.transform.position).magnitude;
-        if (dist2 <= 0.7)
+        if (dist2 <= 0.8)
         {
             txt.enabled = true;
             if (open)
             {
                 if(Input.GetKeyDown(KeyCode.F))
-                    SceneManager.LoadScene("SampleScene");
+                    SceneManager.LoadScene("Scene2");
             }
             else
             {
