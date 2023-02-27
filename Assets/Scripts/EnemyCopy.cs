@@ -20,7 +20,7 @@ public class EnemyCopy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+       
     }
 
     // Update is called once per frame
@@ -81,7 +81,7 @@ public class EnemyCopy : MonoBehaviour
             animator.SetFloat("Speed", moviment.sqrMagnitude);
 
             if (moviment != Vector2.zero)
-            {
+  	    {		
                 animator.SetFloat("HorIdle", moviment.x);
                 animator.SetFloat("VertIdle", moviment.y);
             }
